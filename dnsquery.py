@@ -59,13 +59,24 @@ class DnsQueryCommand(StreamingCommand):
         **Syntax:** **retries=***<int>*
         **Description:** Number of retries when timeout occurs for DNS resolution''',
         default="2")
+    
+    dnserrorfield = Option(
+        doc='''
+        **Syntax:** **dnserrorfield=***<dnserrorfield>*
+        **Description:** Name of the field in which to write the DNS resolution error''',
+        default="dns_error")
+
+    
 
     def query_dns(self, domain, qtype, timeout, retries):
 
-        # var to store the DNS answer
+        # Store the DNS reply
         answer = ""
 
-        # 
+        # Captures the DNS error response
+        dns_error_val = ""
+
+        # Tracks if dns resolution occurred
         is_answer_obtained = False
         
         # number of attempts made 
@@ -86,37 +97,43 @@ class DnsQueryCommand(StreamingCommand):
                 is_answer_obtained = True
             
             except dns.resolver.Timeout as e:
-                error = "Timeout occurred for DNS query: {} -> {}. Error: {}. Command Line: %s".format(qtype, domain, str(e))
-                self.logger.debug(error, self) 
+                dns_error_val = "Timeout occurred for DNS query: {} -> {}. Error: {}".format(qtype, domain, str(e))
+                self.logger.debug(dns_error_val, self) 
                 
                 # Timeout occurred so we didn't get a response
                 is_answer_obtained = False
 
             except Exception as e:
                 # Throw an error and return answer unknown
-                error = "Could not execute DNS query: {} -> {}. Error: {}. Command Line: %s".format(qtype, domain, str(e))
-                self.logger.debug(error, self) 
+                dns_error_val = "Could not execute DNS query: {} -> {}. Error: {}".format(qtype, domain, str(e))
+                self.logger.debug(dns_error_val, self)
                 answer = "-"
 
-        return answer
+        return (answer, dns_error_val)
 
     def stream(self, records):
         
         # Process each record
         for record in records:
 
-            # if no domain value, then provide empty dns answer
+            # stores dns query resolution response
             answer = ""
+
+            # stores error for dns resolution
+            dns_error = ""
 
             if self.domainfield in record:
                 # Get the domain to resolve from existing streamed record
                 domain = record[self.domainfield]
 
                 # Get the DNS query reply for the domain
-                answer = self.query_dns(domain, self.qtype, int(self.timeout), int(self.retries))
+                answer, dns_error = self.query_dns(domain, self.qtype, int(self.timeout), int(self.retries))
             
             # Put the response in the output record
             record[self.answerfield] = answer
+
+            # Put the DNS error
+            record[self.dnserrorfield] = dns_error
             
             # Return the record/response to user
             yield record
