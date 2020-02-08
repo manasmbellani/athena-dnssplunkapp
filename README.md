@@ -41,6 +41,13 @@ Use sudo with the following command:
 sudo /bin/bash 
 ```
 
+### Testing dnsquery
+
+Go to the DNS App for Splunk app, and run the query
+```
+| makeresults | eval domain="www.google.com" | dnsquery domainfield=domain qtype="A"
+```
+
 ### References
 The following references were used to develop this app:
 * (Creating Custom Search Command)[https://dev.splunk.com/enterprise/docs/developapps/customsearchcommands/createcustomsearchcmd/]
