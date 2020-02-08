@@ -56,7 +56,7 @@ sudo /bin/bash
 
 Go to the DNS App for Splunk app, and run the query
 ```
-| makeresults | eval domain="www.google.com" | dnsquery domainfield=domain qtype="A"
+| makeresults | eval domain="www.google.com" | dnsquery domainfield=domain qtype="TXT"
 ```
 
 ### References
