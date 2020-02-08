@@ -33,7 +33,16 @@ If using `python3`, it is  recommended to also run the command below:
 sudo python3 -m pip install dnspython
 ```
 
-## References
+## Development/Contributing 
+
+### To login as root user inside splunk
+Use sudo with the following command:
+```
+sudo /bin/bash 
+```
+
+### References
 The following references were used to develop this app:
 * (Creating Custom Search Command)[https://dev.splunk.com/enterprise/docs/developapps/customsearchcommands/createcustomsearchcmd/]
-
+* (Create custom search commands for apps or add-ons in Splunk Enterprise)[https://dev.splunk.com/enterprise/docs/developapps/customsearchcommands/]
+* (Testing Custom Splunk Commands inside/outside Splunk)[https://www.splunk.com/en_us/blog/tips-and-tricks/building-custom-search-commands-in-python-part-i-a-simple-generating-command.html]
