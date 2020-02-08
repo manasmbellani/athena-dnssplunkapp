@@ -17,7 +17,7 @@ class DnsQueryCommand(StreamingCommand):
     ##Syntax
     
         .. code-block::
-            | dnsquery domainfield=<field> qtype=<query-type e.g. A|MX|TXT|CNAME> answerfield=[field e.g. 'answer']
+            | dnsquery domainfield=<field> qtype=<query-type e.g. A|MX|TXT|CNAME> [answerfield=<field e.g. 'dns_answer'>] [timeout=<int e.g. 2>] [retries=<int e.g. 2>] [dnserrorfield=<field e.g. 'dns_error'>]
 
     ##Description
     
@@ -46,7 +46,7 @@ class DnsQueryCommand(StreamingCommand):
         doc='''
         **Syntax:** **domainfield=***<domainfield>*
         **Description:** Name of the field that will hold the answer''',
-        default="answer")
+        default="dns_answer")
 
     timeout = Option(
         doc='''
