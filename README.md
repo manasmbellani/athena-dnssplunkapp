@@ -24,14 +24,25 @@ docker run -v /opt/athena-dnssplunkapp:/opt/athena-dnssplunkapp -d -p 8000:8000 
 ### Pre-requisite: Installing dnspython
 Before installing the app, it is mandatory that `dnspython` package is installed on the Splunk server/container as the commands that this Splunk App introduces rely on that. 
 
+Hence, copy the contents for dnspython from the folders in this repo to the following folders in Splunk:
+
+* For Python 2.X
+
 ```
-sudo python -m pip install dnspython
+sudo cp -r ./dnspython2/* $SPLUNK_HOME/lib/python2.7/site-packages
+chown -R splunk:splunk $SPLUNK_HOME/lib/python2.7/site-packages/dns*
 ```
 
-If using `python3`, it is  recommended to also run the command below:
+* For Python 3.X
+
 ```
-sudo python3 -m pip install dnspython
+sudo cp -r ./dnspython2/* $SPLUNK_HOME/lib/python3.7/site-packages
+chown -R splunk:splunk $SPLUNK_HOME/lib/python3.7/site-packages/dns*
 ```
+
+### Install App
+Install the App from the Releases section of this directory
+
 
 ## Development/Contributing 
 
