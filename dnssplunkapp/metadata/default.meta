@@ -34,7 +34,7 @@ export = system
 export = system
 
 
-### CUSTOM COMMANDS: Globally available
+### CUSTOM COMMAND: dnsquery - Globally available
 
 [commands]
 export = system
