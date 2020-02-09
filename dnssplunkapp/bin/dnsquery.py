@@ -2,11 +2,31 @@
 
 import sys
 import os
+
 import dns.resolver
+import logging, logging.handlers
+import splunk
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "lib"))
 from splunklib.searchcommands import \
     dispatch, StreamingCommand, Configuration, Option, validators
+
+def setup_logging():
+    """Setup the logging via the python logging"""
+    logger = logging.getLogger('splunk.dnsquery')
+    SPLUNK_HOME = os.environ['SPLUNK_HOME']
+    
+    LOGGING_DEFAULT_CONFIG_FILE = os.path.join(SPLUNK_HOME, 'etc', 'log.cfg')
+    LOGGING_LOCAL_CONFIG_FILE = os.path.join(SPLUNK_HOME, 'etc', 'log-local.cfg')
+    LOGGING_STANZA_NAME = 'python'
+    LOGGING_FILE_NAME = "dnsquery.log"
+    BASE_LOG_PATH = os.path.join('var', 'log', 'splunk')
+    LOGGING_FORMAT = "%(asctime)s %(levelname)-s\t%(module)s:%(lineno)d - %(message)s"
+    splunk_log_handler = logging.handlers.RotatingFileHandler(os.path.join(SPLUNK_HOME, BASE_LOG_PATH, LOGGING_FILE_NAME), mode='a') 
+    splunk_log_handler.setFormatter(logging.Formatter(LOGGING_FORMAT))
+    logger.addHandler(splunk_log_handler)
+    splunk.setupSplunkLogger(logger, LOGGING_DEFAULT_CONFIG_FILE, LOGGING_LOCAL_CONFIG_FILE, LOGGING_STANZA_NAME)
+    return logger
 
 
 @Configuration()
@@ -66,7 +86,8 @@ class DnsQueryCommand(StreamingCommand):
         **Description:** Name of the field in which to write the DNS resolution error''',
         default="dns_error")
 
-    
+    # Setup the logging
+    logger = setup_logging()
 
     def query_dns(self, domain, qtype, timeout, retries):
 
@@ -89,7 +110,7 @@ class DnsQueryCommand(StreamingCommand):
                 
                 # tell user that we are attempting to perform dns resolution for a domain
                 log_message = "Attempting DNS query: {} -> {}, attempt: {}".format(qtype, domain, attempt)
-                self.logger.info(log_message, self)
+                self.logger.info(log_message)
  
                 # Perform the DNS query
                 answer_objects = dns.resolver.query(domain,
@@ -103,7 +124,7 @@ class DnsQueryCommand(StreamingCommand):
             
             except dns.resolver.Timeout as e:
                 dns_error_val = "Timeout occurred for DNS query: {} -> {}. Error: {}".format(qtype, domain, str(e))
-                self.logger.info(dns_error_val, self) 
+                self.logger.info(dns_error_val) 
                 
                 # Timeout occurred so we didn't get a response
                 is_answer_obtained = False
@@ -111,15 +132,12 @@ class DnsQueryCommand(StreamingCommand):
             except Exception as e:
                 # Throw an error and return answer unknown
                 dns_error_val = "Could not execute DNS query: {} -> {}. Error: {}".format(qtype, domain, str(e))
-                self.logger.info(dns_error_val, self)
+                self.logger.info(dns_error_val)
                 answer = "-"
 
         return (answer, dns_error_val)
 
     def stream(self, records):
-        
-        # Set a low logging level to show DEBUG messages and higher
-        self.logger.logging_level = 'DEBUG'
 
         # Process each record
         for record in records:
