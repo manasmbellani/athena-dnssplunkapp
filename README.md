@@ -73,6 +73,12 @@ sudo /bin/bash
     $SPLUNK_HOME/bin/splunk cmd whoami
 ```
 
+### Packaging the App 
+To package the app, we use `slim` tool through the following command which also the generates the app manifest automatically:
+```
+/opt/splunk/bin/slim package dnssplunkapp
+```
+
 ### References
 The following references were used to develop this app:
 * (Creating Custom Search Command)[https://dev.splunk.com/enterprise/docs/developapps/customsearchcommands/createcustomsearchcmd/]
