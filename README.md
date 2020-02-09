@@ -1,7 +1,7 @@
 # athena-dnssplunkapp
 
 ## Introduction
-An app based on the DNSPython package in python which adds commands to run DNS queries of different types
+An app based on the DNSPython package in python which adds commands to run DNS queries of different types such as MX, TXT, CNAME, A
 
 ## Setup
 Note that the instructions below assume that `athena-dnssplunkapp` has been git cloned in the /opt directory on a Linux host.
