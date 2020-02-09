@@ -41,7 +41,7 @@ chown -R splunk:splunk $SPLUNK_HOME/lib/python3.7/site-packages/dns*
 ```
 
 ### Install App
-Install the App from the Releases section of this directory
+Install the Splunk App by downloading the `.tar.gz` file from the Releases section of this repository
 
 Once the app is installed, restart Splunk instance from `Settings` > `Server Controls`
 
