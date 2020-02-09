@@ -81,11 +81,16 @@ class DnsQueryCommand(StreamingCommand):
         
         # number of attempts made 
         attempt = 0
+
         while not is_answer_obtained and attempt < retries:
             try:
                 # increment attempt as dns resolution about to be attempted
                 attempt += 1
-
+                
+                # tell user that we are attempting to perform dns resolution for a domain
+                log_message = "Attempting DNS query: {} -> {}, attempt: {}".format(qtype, domain, attempt)
+                self.logger.info(log_message, self)
+ 
                 # Perform the DNS query
                 answer_objects = dns.resolver.query(domain,
                                                     qtype, lifetime=timeout)
@@ -98,7 +103,7 @@ class DnsQueryCommand(StreamingCommand):
             
             except dns.resolver.Timeout as e:
                 dns_error_val = "Timeout occurred for DNS query: {} -> {}. Error: {}".format(qtype, domain, str(e))
-                self.logger.debug(dns_error_val, self) 
+                self.logger.info(dns_error_val, self) 
                 
                 # Timeout occurred so we didn't get a response
                 is_answer_obtained = False
@@ -106,13 +111,16 @@ class DnsQueryCommand(StreamingCommand):
             except Exception as e:
                 # Throw an error and return answer unknown
                 dns_error_val = "Could not execute DNS query: {} -> {}. Error: {}".format(qtype, domain, str(e))
-                self.logger.debug(dns_error_val, self)
+                self.logger.info(dns_error_val, self)
                 answer = "-"
 
         return (answer, dns_error_val)
 
     def stream(self, records):
         
+        # Set a low logging level to show DEBUG messages and higher
+        self.logger.logging_level = 'DEBUG'
+
         # Process each record
         for record in records:
 
