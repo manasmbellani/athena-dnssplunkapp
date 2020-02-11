@@ -3,13 +3,13 @@
 import sys
 import os
 
-import dns.resolver
 import logging, logging.handlers
 import splunk
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "lib"))
 from splunklib.searchcommands import \
     dispatch, StreamingCommand, Configuration, Option, validators
+import dns.resolver
 
 def setup_logging():
     """Setup the logging via the python logging"""
