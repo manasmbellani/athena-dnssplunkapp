@@ -30,9 +30,9 @@ The app should now appear within the `Manage Apps` section in Splunk under `Apps
 
 ![alt text](dnssplunkapp-installed.png)
 
-### Testing dnsquery - Examples
+## Testing the App - Examples
 
-#### Example 1: Getting MX records for a domain
+### Example 1: Getting MX records for a domain
 Go to the DNS App for Splunk app, and run the query to get the `MX` records for the domain `google.com`:
 ```
 | makeresults
@@ -42,7 +42,7 @@ Go to the DNS App for Splunk app, and run the query to get the `MX` records for 
 
 ![alt text](dnsquery-mx-eg.png)
 
-#### Example 2: Getting TXT/DMARC records for a domain
+### Example 2: Getting TXT/DMARC records for a domain
 To get the `DMARC` record for the domain `google.com` which is obtained by getting `TXT` for the domain `_dmarc.google.com`, run the command:
 
 ```
@@ -53,7 +53,7 @@ To get the `DMARC` record for the domain `google.com` which is obtained by getti
 
 ![alt text](dnsquery-dmarc-txt-eg.png)
 
-#### Example 3: Get IP address for hostnames in the lookup file
+### Example 3: Get IP address for hostnames in the lookup file
 
 To get the IP addresses for the hostnames specified under the field `domain` an inputlookup file called `domains.csv`, run the command:
 ```
@@ -61,13 +61,24 @@ To get the IP addresses for the hostnames specified under the field `domain` an 
 | dnsquery domainfield=domain qtype="A"
 ```
 
-#### Example 4: Get Domain name for the IP Address via PTR
+### Example 4: Get Domain name for the IP Address via PTR
 Get the domain name for `8.8.8.8` IP address by specifying the ARPA address, run the search for `PTR` record as per below:
 ```
 | makeresults
 | eval domain="8.8.8.8.in-addr.arpa"
 | dnsquery domainfield=domain qtype="PTR"
 ```
+
+### Tested Record Types
+The following record types have been tested to work:
+* A
+* AAAA
+* CNAME
+* MX
+* PTR
+* TXT (DMARC)
+
+Note that the app may well work for other record types as well. 
 
 ## App On Splunkbase
 This App has been submitted on Splunkbase and is located [here](https://splunkbase.splunk.com/app/4879/).
