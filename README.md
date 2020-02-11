@@ -33,11 +33,11 @@ The app should now appear within the `Manage Apps` section in Splunk under `Apps
 ## Testing the App - Examples
 
 ### Example 1: Getting MX records for a domain
-Go to the DNS App for Splunk app, and run the query to get the `MX` records for the domain `google.com`:
+Go to the DNS App for Splunk app, and run the query to get the `MX` records for the domain `google.com` and write to a new field `dns_answer_mx` instead of the default field `dns_answer`:
 ```
 | makeresults
 | eval domain="google.com"
-| dnsquery domainfield=domain qtype="MX"
+| dnsquery domainfield=domain qtype="MX" answerfield="dns_answer_mx"
 ```
 
 ![alt text](dnsquery-mx-eg.png)
