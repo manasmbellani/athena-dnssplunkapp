@@ -61,6 +61,14 @@ To get the IP addresses for the hostnames specified under the field `domain` an 
 | dnsquery domainfield=domain qtype="A"
 ```
 
+#### Example 4: Get Domain name for the IP Address via PTR
+Get the domain name for `8.8.8.8` IP address by specifying the ARPA address, run the search for `PTR` record as per below:
+```
+| makeresults
+| eval domain="8.8.8.8.in-addr.arpa"
+| dnsquery domainfield=domain qtype="PTR"
+```
+
 ## App On Splunkbase
 This App has been submitted on Splunkbase and is located [here](https://splunkbase.splunk.com/app/4879/).
 
