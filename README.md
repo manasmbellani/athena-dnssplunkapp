@@ -53,6 +53,14 @@ To get the `DMARC` record for the domain `google.com` which is obtained by getti
 
 ![alt text](dnsquery-dmarc-txt-eg.png)
 
+#### Example 3: Get IP address for hostnames in the lookup file
+
+To get the IP addresses for the hostnames specified under the field `domain` an inputlookup file called `domains.csv`, run the command:
+```
+| inputlookup domains.csv
+| dnsquery domainfield=domain qtype="A"
+```
+
 ## App On Splunkbase
 This App has been submitted on Splunkbase and is located [here](https://splunkbase.splunk.com/app/4879/).
 
