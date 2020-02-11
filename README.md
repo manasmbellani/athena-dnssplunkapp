@@ -36,7 +36,7 @@ Go to the DNS App for Splunk app, and run the query to get the TXT records for t
 ```
 
 ## App On Splunkbase
-This App has been submitted on Splunkbase and is located (here)[https://splunkbase.splunk.com/app/4879/].
+This App has been submitted on Splunkbase and is located [here](https://splunkbase.splunk.com/app/4879/).
 
 ## Development/Contributing 
 This section provides misc references/tips that were used in development for this application:
