@@ -26,6 +26,10 @@ Install the Splunk App by downloading the `.tar.gz` file from the Releases secti
 
 Once the app is installed, restart Splunk instance from `Settings` > `Server Controls`
 
+The app should now appear within the `Manage Apps` section in Splunk under `Apps` > `Manage Apps` option in the top-bar in Splunk.
+
+![alt text](dnssplunkapp-installed.png)
+
 ### Testing dnsquery - Examples
 
 #### Example 1: Getting MX records for a domain
