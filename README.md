@@ -28,6 +28,7 @@ Once the app is installed, restart Splunk instance from `Settings` > `Server Con
 
 ### Testing dnsquery - Examples
 
+#### Example 1: Getting MX records for a domain
 Go to the DNS App for Splunk app, and run the query to get the `MX` records for the domain `google.com`:
 ```
 | makeresults
@@ -37,6 +38,7 @@ Go to the DNS App for Splunk app, and run the query to get the `MX` records for 
 
 ![alt text](dnsquery-mx-eg.png)
 
+#### Example 2: Getting TXT/DMARC records for a domain
 To get the `DMARC` record for the domain `google.com` which is obtained by getting `TXT` for the domain `_dmarc.google.com`, run the command:
 
 ```
