@@ -69,7 +69,7 @@ Get the domain name for `8.8.8.8` IP address by specifying the ARPA address, run
 | dnsquery domainfield=domain qtype="PTR"
 ```
 
-### Tested Record Types
+## Tested Record Types
 The following record types have been tested to work:
 * A
 * AAAA
