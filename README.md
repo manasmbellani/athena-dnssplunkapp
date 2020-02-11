@@ -26,14 +26,26 @@ Install the Splunk App by downloading the `.tar.gz` file from the Releases secti
 
 Once the app is installed, restart Splunk instance from `Settings` > `Server Controls`
 
-### Testing dnsquery
+### Testing dnsquery - Examples
 
-Go to the DNS App for Splunk app, and run the query to get the TXT records for the domain `www.google.com`:
+Go to the DNS App for Splunk app, and run the query to get the `MX` records for the domain `google.com`:
 ```
 | makeresults
 | eval domain="google.com"
+| dnsquery domainfield=domain qtype="MX"
+```
+
+![alt text](dnsquery-mx-eg.png)
+
+To get the `DMARC` record for the domain `google.com` which is obtained by getting `TXT` for the domain `_dmarc.google.com`, run the command:
+
+```
+| makeresults
+| eval domain="_dmarc.google.com"
 | dnsquery domainfield=domain qtype="TXT"
 ```
+
+![alt text](dnsquery-dmarc-txt-eg.png)
 
 ## App On Splunkbase
 This App has been submitted on Splunkbase and is located [here](https://splunkbase.splunk.com/app/4879/).
