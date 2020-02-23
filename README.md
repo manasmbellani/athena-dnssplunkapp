@@ -80,6 +80,12 @@ The following record types have been tested to work:
 
 Note that the app may well work for other record types as well. 
 
+## Viewing progress
+To view the progress of the dnsquery commands run on piped-input, run the following search query:
+```
+index=_internal source=*dnsquery*
+```
+
 ## App On Splunkbase
 This App has been submitted on Splunkbase and is located [here](https://splunkbase.splunk.com/app/4879/).
 
