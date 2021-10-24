@@ -95,7 +95,13 @@ This section provides misc references/tips that were used in development for thi
 ### To login as root user inside splunk container
 Use sudo with the following command:
 ```
-sudo /bin/bash 
+sudo -u splunk /bin/bash 
+```
+
+### To install the app
+Install the app as follows: 
+```
+cp -r /opt/athena-dnssplunkapp/dnssplunkapp /opt/splunk/etc/apps/
 ```
 
 ### To execute commands as a splunk user
