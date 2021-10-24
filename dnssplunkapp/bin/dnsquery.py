@@ -37,16 +37,20 @@ class DnsQueryCommand(StreamingCommand):
     ##Syntax
     
         .. code-block::
-            | dnsquery domainfield=<field> qtype=<query-type e.g. A|MX|TXT|CNAME> [answerfield=<field e.g. 'dns_answer'>] [timeout=<int e.g. 2>] [retries=<int e.g. 2>] [dnserrorfield=<field e.g. 'dns_error'>]
+            | dnsquery domainfield=<field> qtype=<query-type e.g. A|MX|TXT|CNAME> [answerfield=<field e.g. 'dns_answer'>] [timeout=<int e.g. 2>] [retries=<int e.g. 2>] [dnserrorfield=<field e.g. 'dns_error'>] [nss=<nameservers e.g. 8.8.8.8,8.8.4.4>]
 
     ##Description
     
-    Performs a DNS Query on a given domain specified by the domainfield, and returns the response via python's dnspython package
+    Performs a DNS Query on a given domain specified by the domainfield, and returns the response via python's dnspython package.
+    By default, the default nameservers are used, otherwise, custom nameservers are used for resolution by supplying them with 'nss' argument.
 
     ##Example
     
     Perform MX query on each domain in input lookup file `domainsfile` in `answerfield`
         | inputlookup domainsfile | dnsquery domainfield=domain qtype=MX answerfield=answer
+
+    Perform MX query on each domain in input lookup file `domainsfile` in `answerfield` using custom nameserver '8.8.8.8'
+            | inputlookup domainsfile | dnsquery domainfield=domain qtype=MX answerfield=answer nss=8.8.8.8
     """
 
     domainfield = Option(
@@ -86,10 +90,17 @@ class DnsQueryCommand(StreamingCommand):
         **Description:** Name of the field in which to write the DNS resolution error''',
         default="dns_error")
 
+    nss = Option(
+        doc='''
+        **Syntax:** **nss=***<nameservers>*>
+        **Description** Nameserver(s) to use for DNS resolution. By default, default nameservers are used for resolution''',
+        default="default"
+    )
+
     # Setup the logging
     logger = setup_logging()
 
-    def query_dns(self, domain, qtype, timeout, retries):
+    def query_dns(self, domain, qtype, timeout, retries, nss):
 
         # Store the DNS reply
         answer = ""
@@ -109,12 +120,22 @@ class DnsQueryCommand(StreamingCommand):
                 attempt += 1
                 
                 # tell user that we are attempting to perform dns resolution for a domain
-                log_message = "Attempting DNS query: {} -> {}, attempt: {}".format(qtype, domain, attempt)
+                log_message = "Attempting DNS query: {} -> {}, attempt: {} with nameservers: {}".format(qtype, domain, attempt, nss)
                 self.logger.info(log_message)
- 
-                # Perform the DNS query
-                answer_objects = dns.resolver.query(domain,
+                
+                # Set the resolving nameservers, if provided
+                if not (nss == "" or nss == "none" or nss == "default"):
+                    resolver = dns.resolver.Resolver(configure=False)
+                    nss_raw = nss.split(",")
+                    nss = [ ns.strip() for ns in nss_raw ]
+                    resolver.nameservers = nss
+                    # Perform the DNS query with custom resolver with custom nameservers
+                    answer_objects = resolver.query(domain,
                                                     qtype, lifetime=timeout)
+                else:
+                    # Perform the DNS query with default resolver
+                    answer_objects = dns.resolver.query(domain,
+                                                        qtype, lifetime=timeout)
                 
                 # Get the answers and return
                 answer = '\n'.join([answer_object.to_text() for answer_object in answer_objects])
@@ -153,7 +174,7 @@ class DnsQueryCommand(StreamingCommand):
                 domain = record[self.domainfield]
 
                 # Get the DNS query reply for the domain
-                answer, dns_error = self.query_dns(domain, self.qtype, int(self.timeout), int(self.retries))
+                answer, dns_error = self.query_dns(domain, self.qtype, int(self.timeout), int(self.retries), self.nss)
             
             # Put the response in the output record
             record[self.answerfield] = answer
