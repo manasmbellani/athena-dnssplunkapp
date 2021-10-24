@@ -98,10 +98,12 @@ Use sudo with the following command:
 sudo -u splunk /bin/bash 
 ```
 
-### To install the app
-Install the app as follows: 
+### To install the app and activate
+Install the app and activate it in the containerized Splunk version as follows: 
 ```
+rm -rf /opt/splunk/etc/apps/dnssplunkapp
 cp -r /opt/athena-dnssplunkapp/dnssplunkapp /opt/splunk/etc/apps/
+/opt/splunk/bin/splunk restart
 ```
 
 ### To execute commands as a splunk user
