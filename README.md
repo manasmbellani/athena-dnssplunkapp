@@ -42,7 +42,15 @@ Go to the DNS App for Splunk app, and run the query to get the `MX` records for 
 
 ![alt text](dnsquery-mx-eg.png)
 
-### Example 2: Getting TXT/DMARC records for a domain
+### Example 2: Getting A record for a domain via custom nameserver
+Go to the DNS App for Splunk app, and run the query to get the `A` records for the domain `www.google.com` using the nameserver with hostname `dns.google.com` or `8.8.8.8`, and write to a new field `dns_answer_mx` instead of the default field `dns_answer`:
+```
+| makeresults
+| eval domain="www.google.com"
+| dnsquery domainfield=domain qtype="A" answerfield="dns_answer_mx" nss="dns.google,8.8.8.8"
+```
+
+### Example 3: Getting TXT/DMARC records for a domain
 To get the `DMARC` record for the domain `google.com` which is obtained by getting `TXT` for the domain `_dmarc.google.com`, run the command:
 
 ```
@@ -53,7 +61,7 @@ To get the `DMARC` record for the domain `google.com` which is obtained by getti
 
 ![alt text](dnsquery-dmarc-txt-eg.png)
 
-### Example 3: Get IP address for hostnames in the lookup file
+### Example 4: Get IP address for hostnames in the lookup file
 
 To get the IP addresses for the hostnames specified under the field `domain` an inputlookup file called `domains.csv`, run the command:
 ```
@@ -61,7 +69,7 @@ To get the IP addresses for the hostnames specified under the field `domain` an 
 | dnsquery domainfield=domain qtype="A"
 ```
 
-### Example 4: Get Domain name for the IP Address via PTR
+### Example 5: Get Domain name for the IP Address via PTR
 Get the domain name for `8.8.8.8` IP address by specifying the ARPA address, run the search for `PTR` record as per below:
 ```
 | makeresults
