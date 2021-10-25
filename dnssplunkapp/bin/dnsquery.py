@@ -76,7 +76,7 @@ class DnsQueryCommand(StreamingCommand):
         doc='''
         **Syntax:** **timeout=***<timeout>*
         **Description:** Timeout for DNS query resolution''',
-        default="2")
+        default="3")
 
     retries= Option(
         doc='''
@@ -125,10 +125,16 @@ class DnsQueryCommand(StreamingCommand):
                 
                 # Set the resolving nameservers, if provided
                 if not (nss == "" or nss == "none" or nss == "default"):
+
+                    # Parsing the nameservers for dns resolution
+                    nss_list = nss.split(",")
+                    nss_list_stripped = [ ns.strip() for ns in nss_list ]
+
+                    # Resolving any FQDN specified NS (as dnspython only takes IP-based NS) and setting it to the resolver 
+                    nss_list_resolved = [ item.address for ns in nss_list_stripped for item in dns.resolver.query(ns, lifetime=timeout) ]
                     resolver = dns.resolver.Resolver(configure=False)
-                    nss_raw = nss.split(",")
-                    nss = [ ns.strip() for ns in nss_raw ]
-                    resolver.nameservers = nss
+                    resolver.nameservers = nss_list_resolved
+
                     # Perform the DNS query with custom resolver with custom nameservers
                     answer_objects = resolver.query(domain,
                                                     qtype, lifetime=timeout)
