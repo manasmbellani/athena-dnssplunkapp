@@ -43,11 +43,11 @@ Go to the DNS App for Splunk app, and run the query to get the `MX` records for 
 ![alt text](dnsquery-mx-eg.png)
 
 ### Example 2: Getting A record for a domain via custom nameserver
-Go to the DNS App for Splunk app, and run the query to get the `A` records for the domain `www.google.com` using the nameserver with hostname `dns.google.com` or `8.8.8.8`, and write to a new field `dns_answer_mx` instead of the default field `dns_answer`:
+Go to the DNS App for Splunk app, and run the query to get the `A` records for the domain `www.google.com` using the nameserver with hostname `dns.google.com` or `8.8.8.8`, and write to a new field `dns_answer_a` instead of the default field `dns_answer`:
 ```
 | makeresults
 | eval domain="www.google.com"
-| dnsquery domainfield=domain qtype="A" answerfield="dns_answer_mx" nss="dns.google,8.8.8.8"
+| dnsquery domainfield=domain qtype="A" answerfield="dns_answer_a" nss="dns.google,8.8.8.8"
 ```
 
 ### Example 3: Getting TXT/DMARC records for a domain
