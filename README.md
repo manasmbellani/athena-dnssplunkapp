@@ -3,7 +3,7 @@
 ## Introduction
 An app based on the DNSPython package in python which adds commands to run DNS queries of different types such as MX, TXT, CNAME, A
 
-Please note that this app is currently only supported for Splunk Enterprise 8.x.
+Please note that this app is currently only supported for Splunk Enterprise 8.x. It is also typically installed on a Splunk search head.
 
 ## Setup
 Note that the instructions below assume that `athena-dnssplunkapp` has been git cloned in the /opt directory on a Linux host.
