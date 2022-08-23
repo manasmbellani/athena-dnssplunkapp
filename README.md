@@ -1,5 +1,6 @@
 # athena-dnssplunkapp
 
+
 ## Introduction
 An app based on the DNSPython package in python which adds commands to run DNS queries of different types such as MX, TXT, CNAME, A
 
@@ -24,7 +25,7 @@ docker run -v /opt/athena-dnssplunkapp:/opt/athena-dnssplunkapp -d -p 8000:8000 
 ```
 
 ### Install App
-Install the Splunk App by downloading the `.tar.gz` file from the Releases section of this repository.
+Install the Splunk App by downloading the `.tar.gz` file from the Splunkbase app [here](https://splunkbase.splunk.com/app/4879/).
 
 Once the app is installed, restart Splunk instance from `Settings` > `Server Controls`
 
