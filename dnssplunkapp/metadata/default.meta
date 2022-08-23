@@ -45,3 +45,15 @@ export = system
 [viewstates]
 access = read : [ * ], write : [ * ]
 export = system
+
+[app/ui]
+version = 8.0.1
+modtime = 1581080459.651362000
+
+[app/launcher]
+version = 8.0.1
+modtime = 1581080459.652674000
+
+[app/install/state]
+version = 8.0.1
+modtime = 1581146796.259189000
