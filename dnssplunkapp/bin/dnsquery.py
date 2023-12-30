@@ -2,9 +2,13 @@
 
 import sys
 import os
+import re
 
 import logging, logging.handlers
 import splunk
+
+# Simple regex to detect an IP address
+IP_REGEX="^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.?$"
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "lib"))
 from splunklib.searchcommands import \
@@ -131,7 +135,14 @@ class DnsQueryCommand(StreamingCommand):
                     nss_list_stripped = [ ns.strip() for ns in nss_list ]
 
                     # Resolving any FQDN specified NS (as dnspython only takes IP-based NS) and setting it to the resolver 
-                    nss_list_resolved = [ item.address for ns in nss_list_stripped for item in dns.resolver.query(ns, lifetime=timeout) ]
+                    nss_list_resolved = []
+                    for ns in nss_list_stripped:
+                        if re.match(IP_REGEX, ns):
+                            nss_list_resolved.append(ns)
+                        else:
+                            for item in dns.resolver.query(ns, lifetime=timeout):
+                                nss_list_resolved.append(item.address)
+
                     resolver = dns.resolver.Resolver(configure=False)
                     resolver.nameservers = nss_list_resolved
 
